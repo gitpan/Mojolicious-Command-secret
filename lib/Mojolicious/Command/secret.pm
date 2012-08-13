@@ -1,11 +1,12 @@
 package Mojolicious::Command::secret;
 
-use Mojo::Base 'Mojo::Command';
+use Mojo::Base 'Mojolicious::Command';
+use Mojo::Util 'class_to_path';
 
 use File::Spec;
 use Getopt::Long qw(GetOptionsFromArray :config no_ignore_case no_auto_abbrev);   # Match Mojo's commands
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 has description => "Create an application secret() consisting of random bytes\n";
 has usage => <<USAGE;
@@ -37,11 +38,11 @@ sub run
     return unless $ok;
 
     my $secret   = _create_secret($module, $size);
-    my $filename = $self->class_to_path(ref($self->app));
+    my $filename = class_to_path(ref($self->app));
     my $path     = $filename eq 'Mojolicious/Lite.pm' ? $0 : File::Spec->catdir('lib', $filename);
 
     # If we're called as `mojo` just print the secret
-    my $base = join '/', (File::Spec->splitdir($path))[-2,-1];
+    my $base = join '/', (File::Spec->splitdir($path))[-2,-1];   # Warning if perl ./app.pl secret 
     if($print || $base eq 'bin/mojo') {
         print "$secret\n";
         return;
@@ -154,6 +155,10 @@ the C<-p> option and the secret will be printed to C<STDOUT> instead:
  -s, --size      SIZE           Number of bytes to use. Defaults to 32.
 
 Default options can be added to the C<MOJO_SECRET_OPTIONS> environment variable.
+
+=head1 SEE ALSO
+
+L<Crypt::URandom>, L<Crypt::OpenSSL::Random>
 
 =head1 AUTHOR
 

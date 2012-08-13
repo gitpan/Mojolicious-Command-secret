@@ -18,8 +18,8 @@ no_index:
     - t
     - inc
 requires:
-  Mojolicious: 0
+  Mojolicious: 3
 resources:
   bugtracker: http://github.com/sshaw/Mojolicious-Command-secret/issues
   homepage: http://github.com/sshaw/Mojolicious-Command-secret
-version: 0.01
+version: 0.02
